@@ -2,17 +2,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const element = document.querySelector("#checkPage");
 
     document.getElementById("customSelector").value = "";
+
+    autoFillSelector();
+
+
     element.addEventListener("click", () => {
         selector = document.getElementById("customSelector").value;
+        console.log('analyse', selector);
         analysePage(selector);
     });
 
-    const elementHighlightPage = document.querySelector("#highlightPage");
+   /*const elementHighlightPage = document.querySelector("#highlightPage");
 
     elementHighlightPage.addEventListener("click", () => {
         selector = document.getElementById("customSelector").value;
         hightlightPage(selector);
-    });
+    });*/
 
 
     const elementUnHighlightPage = document.querySelector("#unHighlightPage");
@@ -34,19 +39,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    const parsePage = document.querySelector("#testParse");
+    /*const parsePage = document.querySelector("#testParse");
 
     parsePage.addEventListener("click", () => {
         selector = document.getElementById("customSelector").value;
-        hightlightPage(selector);
         analysePage(selector);
-    });
+    });*/
 }, false);
 
-function hightlightPage(selector) {
+
+function autoFillSelector(){
+    let newsMap = new Map([
+        ["https://www.derstandard.at/", "teaser-title"],
+        ["https://edition.cnn.com/","cd__headline-text"],
+        ["https://www.nachrichten.at/","teaser__link"],
+        ["https://orf.at/", "ticker-story-headline"],
+        ["https://dietagespresse.com/", "entry-title"],
+        ["https://www.bbc.com/","media__link"],
+        ["https://www.oe24.at/","title"],
+        ["https://www.krone.at/","a__title"],
+        ["https://www.foxnews.com/", "title"],
+        ["https://www.nytimes.com/","indicate-hover"],
+        ["https://www.reuters.com/", "heading_5_half"],
+        ["https://techcrunch.com/", "post-block__title__link"]
+    ]);
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+        var activeTab = tabs[0];
+        document.getElementById("customSelector").value = newsMap.get(activeTab.url);
+    })
+}
+
+function hightlightPage(data,selector) {
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
         var activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, {"action": "highlight_page", "selector": selector}, response => {
+        chrome.tabs.sendMessage(activeTab.id, {"action": "highlight_page", "data": data, "selector": selector}, response => {
             if(response.message === 'done') {
                 console.log('highlighted done');
             }
@@ -65,7 +91,7 @@ function unhightlightPage(selector) {
     });
 }
 
-function analysePage(selector, highlight=false) {
+function analysePage(selector) {
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
         var activeTab = tabs[0];
         chrome.tabs.sendMessage(activeTab.id, {"action": "analyse_page", "selector": selector}, response => {
@@ -105,6 +131,8 @@ function analysePage(selector, highlight=false) {
 
                 const element = document.querySelector("#message");
                 element.innerHTML = `<p >Good: ${good.length}</p> <p >Neutral: ${neutral.length}</p> <p >Bad: ${bad.length}</p> <p>Overall rating: ${rating} </p>`;
+
+                this.hightlightPage(response.data.results, selector);
             }
         });
     });
