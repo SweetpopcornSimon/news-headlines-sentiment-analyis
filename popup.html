@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Media Bias</title>
+    <script src="popup.js"></script>
+    <script src="lodash.min.js"></script>
+</head>
+
+<style>
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .active,
+    .collapsible:hover {
+        background-color: #555;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+</style>
+
+<body style="width: 400px;">
+    <h1>Media Bias</h1>
+    <div id='message'></div>
+    <button id="checkPage">Analyse!</button>
+    <button id="highlightPage">Show</button>
+    <button id="unHighlightPage">Clear</button>
+    <br>
+
+    <button type="button" id="collapsible" class="collapsible">Advanced Settings</button>
+    <div class="content">
+        <p>Custom Selector</p>
+        <input type="text" id="customSelector">
+        <button id="testParse">Analyse and highlight!!!</button>
+    </div>
+</body>
+
+</html>

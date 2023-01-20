@@ -1,0 +1,21 @@
+{
+    "name": "Good News",
+    "description": "Rosa Rota Brille",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [ {
+        "js": [ "jquery-3.6.0.min.js", "content_script.js", "lodash.js"  ],
+        "matches": [ "http://*/*", "https://*/*" ]    
+    } ],
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "scripting"
+        ]
+}
